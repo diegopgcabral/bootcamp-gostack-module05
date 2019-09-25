@@ -5,7 +5,14 @@ import { Link } from 'react-router-dom';
 import api from '../../services/api';
 
 import Container from '../../components/Container';
-import { Form, SubmitButton, List } from './styles';
+import {
+  Form,
+  SubmitButton,
+  List,
+  DetailsButton,
+  RemoveButton,
+  ClearButton,
+} from './styles';
 
 export default class Main extends Component {
   state = {
@@ -68,8 +75,26 @@ export default class Main extends Component {
     } catch (error) {
       this.setState({ error: true });
     } finally {
-      this.setState({ loading: false, error: true });
+      this.setState({ loading: false });
     }
+  };
+
+  HandleClearList = () => {
+    localStorage.clear();
+
+    this.setState({
+      repositories: [],
+    });
+  };
+
+  handleRemove = repository => {
+    const { repositories } = this.state;
+    const filteredArray = repositories.filter(arrayItem => {
+      return arrayItem !== repository;
+    });
+
+    this.setState({ repositories: [...filteredArray] });
+    localStorage.setItem('repositories', JSON.stringify(repositories));
   };
 
   render() {
@@ -103,12 +128,26 @@ export default class Main extends Component {
           {repositories.map(repository => (
             <li key={repository.name}>
               <span>{repository.name}</span>
-              <Link to={`/repository/${encodeURIComponent(repository.name)}`}>
-                Detalhes
-              </Link>
+              <div>
+                <DetailsButton>
+                  <Link
+                    to={`/repository/${encodeURIComponent(repository.name)}`}
+                  >
+                    Detalhes
+                  </Link>
+                </DetailsButton>
+                <RemoveButton
+                  onClick={() => {
+                    this.handleRemove(repository);
+                  }}
+                >
+                  Remover
+                </RemoveButton>
+              </div>
             </li>
           ))}
         </List>
+        <ClearButton onClick={this.HandleClearList}>Limpar Tudo</ClearButton>
       </Container>
     );
   }

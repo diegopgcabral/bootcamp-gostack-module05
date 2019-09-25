@@ -96,7 +96,7 @@ export default class Repository extends Component {
     } = this.state;
 
     if (loading) {
-      return <Loading>Carregando</Loading>;
+      return <Loading>Carregando...</Loading>;
     }
     return (
       <Container>
