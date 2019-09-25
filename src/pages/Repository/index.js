@@ -56,7 +56,7 @@ export default class Repository extends Component {
 
   loadIssues = async () => {
     const { match } = this.props;
-    const { filters, filterIndex } = this.state;
+    const { filters, filterIndex, page } = this.state;
 
     const repoName = decodeURIComponent(match.params.repository);
 
@@ -66,6 +66,7 @@ export default class Repository extends Component {
       params: {
         state: filters[filterIndex].state,
         per_page: 5,
+        page,
       },
     });
 
@@ -147,7 +148,6 @@ export default class Repository extends Component {
             Próximo
           </button>
         </PageActions>
-        {issues.length === 0 && <p>Issues não encontrado</p>}
       </Container>
     );
   }

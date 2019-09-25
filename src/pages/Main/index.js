@@ -19,6 +19,7 @@ export default class Main extends Component {
     newRepo: '',
     repositories: [],
     loading: false,
+    error: null,
   };
 
   // Carregar dados do localStorage
@@ -41,14 +42,14 @@ export default class Main extends Component {
   }
 
   handleInputChange = e => {
-    this.setState({ newRepo: e.target.value });
+    this.setState({ newRepo: e.target.value, error: null });
   };
 
   handleSubmit = async e => {
     // Evita que o formulário faça o refresh na página
     e.preventDefault();
 
-    this.setState({ loading: true });
+    this.setState({ loading: true, error: false });
 
     try {
       const { newRepo, repositories } = this.state;
@@ -70,7 +71,6 @@ export default class Main extends Component {
         // Conceito de imutabilidade do React
         repositories: [...repositories, data],
         newRepo: '',
-        loading: false,
       });
     } catch (error) {
       this.setState({ error: true });
@@ -110,14 +110,14 @@ export default class Main extends Component {
         <Form onSubmit={this.handleSubmit} error={error}>
           <input
             type="text"
-            placeholder="Adicionar Repositório"
+            placeholder="Adicionar repositório"
             value={newRepo}
             onChange={this.handleInputChange}
           />
 
           <SubmitButton loading={loading}>
             {loading ? (
-              <FaSpinner color="#FFF" size="14" />
+              <FaSpinner color="#FFF" size={14} />
             ) : (
               <FaPlus color="#FFF" size={14} />
             )}
@@ -141,7 +141,7 @@ export default class Main extends Component {
                     this.handleRemove(repository);
                   }}
                 >
-                  Remover
+                  Excluir
                 </RemoveButton>
               </div>
             </li>
